@@ -26,7 +26,7 @@ SECRET_KEY = '=#yf1w-$*07*c2igo%hi#uc2y*k)%$)c67v(2l87_mn#-*&vtu'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0','localhost','127.0.0.1','djangogqlapi.herokuapp.com']
+ALLOWED_HOSTS = ['0.0.0.0','localhost','127.0.0.1','djgql.herokuapp.com']
 
 
 
