@@ -21,7 +21,7 @@ class Movie(models.Model):
     vote_count=models.IntegerField()
     video=models.BooleanField()
     vote_average=models.FloatField()
-    
+    tags=models.TextField(null=True)
 
     def __str__(self):
         return self.title
@@ -31,10 +31,13 @@ class MovieList(models.Model):
 
     codename = models.CharField(
         max_length=30,
+        unique=True,
         validators=[RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed')]
         )
 
-    movies= models.ManyToManyField('Movie')
+    movies= models.ManyToManyField('Movie',related_name='movies')
+    listtags=models.TextField(null=True)
+    recommended=models.ManyToManyField('Movie',related_name='recommended')
     
     def __str__(self):
         return self.codename

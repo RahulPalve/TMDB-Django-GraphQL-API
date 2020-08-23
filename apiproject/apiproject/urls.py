@@ -21,7 +21,6 @@ from graphene_django.views import GraphQLView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index,name='index'),
-    path('populate_db/',views.populateDB,name='populateDB'),
     path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
 ]
 
