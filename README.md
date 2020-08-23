@@ -25,7 +25,7 @@
 
 # Installation Guide
 ***Instructions to run project on localhost :**</br>
-( Only applicable for "**master**" branch, "**prod**" branch have production ready code ), also the database provided is pre-populated. If you want to Populate database follow below instructions delete db file and run "**populate_db.py**" script.
+( Only applicable for "**master**" branch, "**prod**" branch have production ready code ), also the database provided is pre-populated. If you want to Populate database delete  db file follow below instructions and run "**populate_db.py**" script.
 
 To setup this project, create a virtual environment using Python 3.7 or higher. And make sure you install django 3.1([link to Django Installation Guide !](https://docs.djangoproject.com/en/2.2/topics/install/) ). Then run the following command in your terminal (ensure that you are in the project directory):
 
