@@ -9,7 +9,9 @@ API_KEY='986eb0ba9ed1a2b7084c401742843efa'
 REG='IN'
 LANG='en-US'
 base_url='https://api.themoviedb.org/3/movie/'
-for page in range(1,6):
+PAGES=10
+
+for page in range(1,PAGES+1):
     params='popular?api_key={}&language={}&region={}&page={}'.format(API_KEY,LANG,REG,str(page))
     r=requests.get(base_url+params)
     print("Database adding movies from page : ",page)
@@ -38,5 +40,4 @@ for page in range(1,6):
             tags=tags
         )
         m.save()
-        print("..",end='')
     

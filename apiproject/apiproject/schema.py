@@ -1,7 +1,7 @@
 import graphene
 from graphene_django import DjangoObjectType
 from apiapp.models import Movie, MovieList
-from graphql import GraphQLError
+
 
 class MovieType(DjangoObjectType):
     class Meta:
@@ -12,25 +12,27 @@ class MovieListType(DjangoObjectType):
         model = MovieList
 
 class CreateMovieList(graphene.Mutation):
-    id = graphene.Int()
     codename=graphene.String()
+    success=graphene.Boolean()
 
     class Arguments:
         codename=graphene.String()
 
     def mutate(self, info, codename):
-        m = MovieList(codename=codename)
-        m.save()
-
+        try:
+            m = MovieList(codename=codename)
+            m.save()
+            success=True
+        except:
+            success=False
         return CreateMovieList(
-            id=m.pk,
             codename=m.codename,
+            success=success,
         )   
 
 class PushToList(graphene.Mutation):
     movie_id = graphene.Int()
     codename=graphene.String()
-    id = graphene.Int()
 
     class Arguments:
         codename=graphene.String()
@@ -50,12 +52,10 @@ class PushToList(graphene.Mutation):
         tag_union=list(set_mltags.union(set_mtags))
         ml.listtags=','.join(tag_union)
         ml.save()
-        
 
         return PushToList(
             codename=ml.codename,
-            movie_id=m.tmdb_id,
-            id=ml.id
+            movie_id=m.pk,
         )
 
 
@@ -63,20 +63,25 @@ class PushToList(graphene.Mutation):
 class Query(graphene.ObjectType):
 
     movies=graphene.List(MovieType)
-    movie=graphene.Field(MovieType, id=graphene.Int())
+    movie=graphene.Field(MovieType, movie_id=graphene.Int())
+    lists=graphene.List(MovieListType)
+    list=graphene.Field(MovieListType,codename=graphene.String())
     recommendedMovies=graphene.List(MovieType,codename=graphene.String())
-    movieList=graphene.Field(MovieListType,codename=graphene.String())
+
 
     def resolve_movies(self,info):
         return Movie.objects.all()
 
-    def resolve_movie(self,info,id=None):
+    def resolve_movie(self,info,movie_id=None):
         try:
-            return Movie.objects.get(pk=id)
+            return Movie.objects.get(pk=movie_id)
         except:
             return None
 
-    def resolve_movieList(self,info,codename=None):
+    def resolve_lists(self,info):
+        return MovieList.objects.all()
+
+    def resolve_list(self,info,codename=None):
         try:
             return MovieList.objects.get(codename=codename)
         except:
@@ -86,11 +91,19 @@ class Query(graphene.ObjectType):
         ml=MovieList.objects.get(codename=codename)
         tag_set=set(ml.listtags.split(","))
 
-        recommended=sorted(Movie.objects.all(), key=lambda movie: len(tag_set.intersection(set(movie.tags.split(",")))))
+        def Jaccard(movie):
+            try:
+                intersect=len(tag_set.intersection(set(movie.tags.split(","))))
+                union=len(tag_set.union(set(movie.tags.split(","))))
+                return float(intersect/union)
+            except:
+                return 0
+
+        recommended=sorted(Movie.objects.all(), key=Jaccard)
         l=len(recommended)
         return recommended[l-1:l-10:-1]
 
 class Mutation(graphene.ObjectType):
-    create_movie_list = CreateMovieList.Field()
-    push_to_list = PushToList.Field() 
+    list = CreateMovieList.Field()
+    push = PushToList.Field() 
 schema = graphene.Schema(query=Query,mutation=Mutation)
