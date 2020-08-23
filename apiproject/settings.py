@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = '=#yf1w-$*07*c2igo%hi#uc2y*k)%$)c67v(2l87_mn#-*&vtu'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0','localhost','127.0.0.1','frozen-beyond-49907.herokuapp.com']
 
