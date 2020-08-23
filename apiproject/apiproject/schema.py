@@ -33,15 +33,20 @@ class CreateMovieList(graphene.Mutation):
 class PushToList(graphene.Mutation):
     movie_id = graphene.Int()
     codename=graphene.String()
+    success=graphene.Boolean()
 
     class Arguments:
         codename=graphene.String()
         movie_id = graphene.Int()
 
     def mutate(self, info, codename, movie_id):
-        ml = MovieList.objects.get(codename=codename)
-        m = Movie.objects.get(pk=movie_id)
-        ml.movies.add(m)
+        try:
+            ml = MovieList.objects.get(codename=codename)
+            m = Movie.objects.get(pk=movie_id)
+            ml.movies.add(m)
+            success=True
+        except:
+            success=False
 
         if(ml.listtags!=None):
             set_mltags=set(ml.listtags.split(','))
@@ -56,6 +61,7 @@ class PushToList(graphene.Mutation):
         return PushToList(
             codename=ml.codename,
             movie_id=m.pk,
+            success=success
         )
 
 
@@ -65,8 +71,8 @@ class Query(graphene.ObjectType):
     movies=graphene.List(MovieType)
     movie=graphene.Field(MovieType, movie_id=graphene.Int())
     lists=graphene.List(MovieListType)
-    list=graphene.Field(MovieListType,codename=graphene.String())
-    recommendedMovies=graphene.List(MovieType,codename=graphene.String())
+    list=graphene.List(MovieType,codename=graphene.String())
+    recommended=graphene.List(MovieType,codename=graphene.String())
 
 
     def resolve_movies(self,info):
@@ -83,11 +89,11 @@ class Query(graphene.ObjectType):
 
     def resolve_list(self,info,codename=None):
         try:
-            return MovieList.objects.get(codename=codename)
+            return MovieList.objects.get(codename=codename).movies.all()
         except:
             return None
 
-    def resolve_recommendedMovies(self,info,codename=None):
+    def resolve_recommended(self,info,codename=None):
         ml=MovieList.objects.get(codename=codename)
         tag_set=set(ml.listtags.split(","))
 

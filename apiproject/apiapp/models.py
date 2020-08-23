@@ -37,7 +37,6 @@ class MovieList(models.Model):
 
     movies= models.ManyToManyField('Movie',related_name='movies')
     listtags=models.TextField(null=True)
-    recommended=models.ManyToManyField('Movie',related_name='recommended')
     
     def __str__(self):
         return self.codename
