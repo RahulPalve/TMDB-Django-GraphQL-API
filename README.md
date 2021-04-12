@@ -1,26 +1,5 @@
 # Checkout Live running version!
 [https://djgql.herokuapp.com/api](https://djgql.herokuapp.com/api)
-# Guide for Users
-**Get Movie Details :**<p> Query **movie**, Required arguments: **movieId**, Available Fields: **title**, **overview** and others.
-
-**Get List Of All Movies:**<p> Query **movies** Available Fields: **title**, **overview** and others.
-
-**Get Movies in a List:**<p> Query **list**, Required arguments: **codename**,  Available Fields: **title**, **overview** and others.
-
-**Get All available Lists:**<p> Query **lists**, Available Fields: **codename**.
-
-**Get Recommendations:**<p> Query **recommended**, Required arguments: **codename**, Available Fields: **title**, **overview** and others.
-
-![query](https://github.com/RahulPalve/TMDB-Django-GraphQL-API/blob/master/query.png)
-
-**Create List:**<p> Mutation **list**, Required arguments: **codename**, Available Fields: **codename**, **success**.
-
-**Create List:**<p> Mutation **push**, Required arguments: **codename**,**movieId**,  Available Fields: **codename**, **success**.
-
-![query](https://github.com/RahulPalve/TMDB-Django-GraphQL-API/blob/master/muta.png)
-
-
-
 
 
 # Installation Guide
